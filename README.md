@@ -5,6 +5,7 @@
 传统方法
 
 常见的做法包括：
+
 	•	特征工程 + 传统机器学习（如 TF-IDF + SVM、CRF）；
 	•	深度学习序列模型（如 BiLSTM + Attention、TextCNN）；
 	•	预训练模型微调（如 BERT、RoBERTa）。

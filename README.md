@@ -1,5 +1,5 @@
 
-1. 项目介绍
+## 1. 项目介绍
 
 本项目面向 医疗对话场景的意图识别任务。
 
@@ -17,7 +17,7 @@
 
 
 
-2. 环境准备
+## 2. 环境准备
 
 确保已安装：
 
@@ -29,7 +29,9 @@
 
 
 
-3. 模型下载
+## 3. 模型下载
+```python
+
 
 使用 modelscope 下载 Qwen2.5-7B-Instruct-GGUF 模型（分片格式）：
 
@@ -37,28 +39,28 @@ modelscope download --model Qwen/Qwen2.5-7B-Instruct-GGUF qwen2.5-7b-instruct-fp
 modelscope download --model Qwen/Qwen2.5-7B-Instruct-GGUF qwen2.5-7b-instruct-fp16-00002-of-00004.gguf --local_dir /home/model/public/real_zhangguowen/models/qwen2.5-7b-instruct-gguf
 modelscope download --model Qwen/Qwen2.5-7B-Instruct-GGUF qwen2.5-7b-instruct-fp16-00003-of-00004.gguf --local_dir /home/model/public/real_zhangguowen/models/qwen2.5-7b-instruct-gguf
 modelscope download --model Qwen/Qwen2.5-7B-Instruct-GGUF qwen2.5-7b-instruct-fp16-00004-of-00004.gguf --local_dir /home/model/public/real_zhangguowen/models/qwen2.5-7b-instruct-gguf
+```
 
 
 
-
-4. 模型启动
+## 4. 模型启动
 
 使用 llama.cpp server 启动模型（指定 GPU 设备）：
-
+```python
 docker run --privileged --name llama9001 --gpus device=2 \
   -v /home/model/public/real_zhangguowen/models/qwen2.5-7b-instruct-gguf/:/models \
   -p 9997:8000 ghcr.nju.edu.cn/ggml-org/llama.cpp:server-cuda-b5726 \
   -m /models/qwen2.5-7b-instruct-fp16-00001-of-00004.gguf \
   --port 8000 --host 0.0.0.0 -c 16384 --n-gpu-layers 100 -n 4096 -np 8
-
+```
 此时模型服务会监听在 http://<IP>:9997/v1/。
 
 
 
-5. 模型测试
+## 5. 模型测试
 
 使用 OpenAI SDK 进行接口调用：
-
+```
 from openai import OpenAI
 
 client = OpenAI(
@@ -74,12 +76,12 @@ resp = client.chat.completions.create(
 
 print(resp.choices[0].message.content)
 
+```
 
 
+## 6. Baseline
 
-6. Baseline
-
-6.1. 大模型Prompt方案：
+### 6.1. 大模型Prompt方案：
 
 实验运行流程
 
@@ -93,7 +95,7 @@ print(resp.choices[0].message.content)
     2.可以尝试更大模型，如 Qwen2.5-14B。这里的模型是自己进行部署的。使用的llama.cpp。
 
 
-6.2. Bert微调方案：
+### 6.2. Bert微调方案：
 
 实验运行流程
 
@@ -106,4 +108,4 @@ print(resp.choices[0].message.content)
     1.可以更换ernie。
     2.也可以进行大模型微调方案。
 
-7. 提交结果
+## 7. 提交结果

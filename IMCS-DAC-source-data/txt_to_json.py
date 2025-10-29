@@ -10,7 +10,7 @@ import json
 
 # 文件路径
 json_file = "/Volumes/PSSD/NetThink/pythonProject/7-19-Project/imcs21-cblue-main/task4/IMCS-DAC-source-data/IMCS-DAC_test.json"
-pred_file = "/Volumes/PSSD/predict_results.txt"
+pred_file = "/Volumes/PSSD/NetThink/pythonProject/GITHUB/LLM-DAC/IMCS-DAC-source-data"
 output_file = "IMCS-DAC_test_with_pred.json"
 
 # id2label 映射表

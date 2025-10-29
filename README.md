@@ -6,6 +6,7 @@
 传统方法
 
 常见的做法包括：
+
 	•	特征工程 + 传统机器学习（如 TF-IDF + SVM、CRF）；
 	•	深度学习序列模型（如 BiLSTM + Attention、TextCNN）；
 	•	预训练模型微调（如 BERT、RoBERTa）。
@@ -14,16 +15,19 @@
 
 本实验基于 大语言模型（LLM），通过 提示词设计（Prompt Tuning），结合整段对话的上下文，生成每句话对应的意图标签。这样能更好地利用对话语境信息，相比传统单句分类方法有明显优势。
 
-⸻
+
 
 2. 环境准备
 
 确保已安装：
+
 	•	Python ≥ 3.8
+
 	•	modelscope
+
 	•	Docker（需支持 GPU，安装 NVIDIA Container Toolkit）
 
-⸻
+
 
 3. 模型下载
 
@@ -35,7 +39,7 @@ modelscope download --model Qwen/Qwen2.5-7B-Instruct-GGUF qwen2.5-7b-instruct-fp
 modelscope download --model Qwen/Qwen2.5-7B-Instruct-GGUF qwen2.5-7b-instruct-fp16-00004-of-00004.gguf --local_dir /home/model/public/real_zhangguowen/models/qwen2.5-7b-instruct-gguf
 
 
-⸻
+
 
 4. 模型启动
 
@@ -49,7 +53,7 @@ docker run --privileged --name llama9001 --gpus device=2 \
 
 此时模型服务会监听在 http://<IP>:9997/v1/。
 
-⸻
+
 
 5. 模型测试
 
@@ -71,32 +75,35 @@ resp = client.chat.completions.create(
 print(resp.choices[0].message.content)
 
 
-⸻
+
 
 6. Baseline
+
 6.1. 大模型Prompt方案：
 
 实验运行流程
 
 	1.	在 llm.py 中配置模型服务的 IP 和 API_KEY。
+
 	2.	执行 llm.py，会调用模型完成对话意图识别，并将结果保存到 success.json。直接提交该文件即可达到70%的准确率。
 
 优化方向：
 
     1.可以继续调优提示词。
-    2.可以尝试更大模型，如 Qwen2.5-14B。
+    2.可以尝试更大模型，如 Qwen2.5-14B。这里的模型是自己进行部署的。使用的llama.cpp。
+
 
 6.2. Bert微调方案：
 
 实验运行流程
 
-    0.  使用json_to_txt将text.json转换为txt文件，后续拿着该txt文件去训练，配置到straight_train_bert。
-    1.	在 straight_train_bert 中配置数据集路径和模型路径。即可开始执行训练。输出txt文件，后续拿着这个txt文件去匹配为json，然后可以进行提交。
-    2.	在inference中将微调好的模型配置好路径，然后选择要提交的文件，和结果即可。直接提交该文件即可达到85%的准确率。
-
+    0.  使用json_to_txt.py将text.json转换为txt文件，后续拿着该txt文件去训练，配置到straight_train_bert。
+    1.	在 straight_train_bert 中配置数据集路径和模型路径。即可开始执行训练。
+    2.	在inference中将微调好的模型配置好路径，（微调后的模型可以达到结果为85.）
+    3.  使用json_to_txt.py将IMCS-DAC_test.json转换为txt文件，拿着该txt文件去inference预测，得到结果txt文件。然后使用txt_to_json.py将结果txt文件转换为json格式，得到文件IMCS-DAC_test_with_pred.json作为最终提交结果。
 优化方向：
 
     1.可以更换ernie。
     2.也可以进行大模型微调方案。
 
-
+7. 提交结果

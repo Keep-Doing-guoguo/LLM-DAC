@@ -16,8 +16,8 @@ from prompt import prompt
 #data_path = "/Volumes/PSSD/NetThink/pythonProject/7-19-Project/imcs21-cblue-main/task4/IMCS-DAC-source-data/IMCS-DAC_train.json"
 test_path = "/Volumes/PSSD/NetThink/pythonProject/7-19-Project/imcs21-cblue-main/task4/IMCS-DAC-source-data/IMCS-DAC_test.json"
 
-API_URL = ""
-API_KEY = ""   # 替换成你的实际 key
+API_URL = "https://api.siliconflow.cn/v1/chat/completions"
+API_KEY = "sk-"   # 替换成你的实际 key
 
 # 全局变量：记录调用次数与起始时间
 _last_reset_time = time.time()
@@ -43,8 +43,6 @@ def _check_rate_limit():
         _request_count = 0
 
     _request_count += 1
-
-
 
 
 def call_qwen_local(message):
@@ -162,7 +160,7 @@ for dialog_id, sentences in data.items():
     output = "\n".join(f"{line}" for i, line in enumerate(dialog))
 
     message = [{'role': 'user', 'content': f'{prompt.format(input=output)}'}]
-    result = call_qwen_dashscope(message)
+    result = call_qwen_siliconflow(message)
     #print(result)
     labels = after_process(dialog_id, result)#这个结果是一个长度和sentences相同的，并且需要将其保存到原始文件中。和原始数据进行拼接到一起。
     print(len(labels) ,len(sentences))
@@ -209,6 +207,7 @@ print("✅ 已保存回填后的结果到 merged.json")
 '''
 
 llm load:
+
 modelscope download --model Qwen/Qwen2.5-14B-Instruct-GGUF qwen2.5-14b-instruct-fp16.gguf --local_dir /home/model/public/real_zhangguowen/models
 
 
